@@ -3,6 +3,7 @@ package com.github.theprogmatheus.auto.jautomail.services;
 import com.github.theprogmatheus.auto.jautomail.Certificate;
 import com.github.theprogmatheus.auto.jautomail.Participant;
 import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
@@ -42,7 +43,9 @@ public class CertificateService {
             throw new RuntimeException("The certificate template file does not exists.");
 
         try (Playwright playwright = Playwright.create();
-             Browser browser = playwright.chromium().launch()) {
+             Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
+                     .setHeadless(true).setChromiumSandbox(false))) {
+
             Page page = browser.newPage();
             page.navigate(CERTIFICATE_TEMPLATE_FILE.toURI().toString());
             final String htmlContent = Files.readString(CERTIFICATE_TEMPLATE_FILE.toPath());
