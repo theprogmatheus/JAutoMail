@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.github.theprogmatheus.auto.jautomail.Main.log;
+
 public class APIService {
 
     public static final String API_URL = "https://docs.google.com/spreadsheets/d/%s/gviz/tq?tqx=out:csv";
@@ -20,6 +22,8 @@ public class APIService {
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     public static List<Participant> fetchParticipants() throws IOException, InterruptedException {
+        log.info("Buscando respostas do formulário...");
+
         Objects.requireNonNull(SPREADSHEET_ID, "The spreadsheet id can't be null.");
 
         String formatedApiUrl = API_URL.formatted(SPREADSHEET_ID);
@@ -48,6 +52,7 @@ public class APIService {
                 participants.add(participant);
             }
         }
+        log.info("Foram encontrados %d registros.".formatted(participants.size()));
         return participants;
     }
 

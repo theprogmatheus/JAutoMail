@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("application")
     id("com.gradleup.shadow") version "9.2.2"
 }
 
@@ -24,4 +25,9 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+
+application{
+    mainClass = "com.github.theprogmatheus.auto.jautomail.Main"
 }

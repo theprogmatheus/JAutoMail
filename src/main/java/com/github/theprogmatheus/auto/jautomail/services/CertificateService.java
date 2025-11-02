@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.github.theprogmatheus.auto.jautomail.Main.log;
+
 public class CertificateService {
 
     public static final File CERTIFICATE_TEMPLATE_FILE;
@@ -33,6 +35,8 @@ public class CertificateService {
     }
 
     public static List<Certificate> generateCertificates(List<Participant> participants, boolean regenerateIfExists) throws IOException {
+        log.info("Gerando certificados para %d participantes...".formatted(participants.size()));
+
         List<Certificate> certificates = new ArrayList<>();
 
         Objects.requireNonNull(participants, "The participants list can't be null.");
@@ -55,6 +59,7 @@ public class CertificateService {
                 File outFile = new File(OUTPUT_FOLDER, fileName);
                 if (outFile.exists() && !regenerateIfExists) {
                     certificates.add(new Certificate(participant, outFile));
+                    log.info("Certificado recuperado para %s.".formatted(participant.getName()));
                     continue;
                 }
                 String html = htmlContent
@@ -66,9 +71,12 @@ public class CertificateService {
                 byte[] buffer = page.pdf(PDF_OPTIONS);
                 Files.write(outFile.toPath(), buffer);
 
+                log.info("Certificado gerado para %s.".formatted(participant.getName()));
                 certificates.add(new Certificate(participant, outFile));
             }
         }
+
+        log.info("Foram gerados/recuperados %d certificados.".formatted(certificates.size()));
         return certificates;
     }
 
